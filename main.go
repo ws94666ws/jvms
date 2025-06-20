@@ -4,18 +4,20 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io/fs"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strconv"
+	"strings"
+
 	"github.com/baneeishaque/adoptium_jdk_go"
 	"github.com/codegangsta/cli"
 	"github.com/tucnak/store"
 	"github.com/ystyle/jvms/utils/file"
 	"github.com/ystyle/jvms/utils/jdk"
 	"github.com/ystyle/jvms/utils/web"
-	"io/fs"
-	"log"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
 )
 
 var version = "2.1.0"
@@ -194,12 +196,30 @@ func commands() []cli.Command {
 		{
 			Name:      "switch",
 			ShortName: "s",
-			Usage:     "Switch to use the specified version.",
+			Usage:     "Switch to use the specified version or index number.",
 			Action: func(c *cli.Context) error {
 				v := c.Args().Get(0)
 				if v == "" {
-					return errors.New("you should input a version, Type \"jvms list\" to see what is installed")
+					return errors.New("you should input a version or index number, Type \"jvms list\" to see what is installed")
 				}
+
+				// Check if input is a number (index)
+				index, err := strconv.Atoi(v)
+				if err == nil && index > 0 {
+					// Input is a valid number, get the list of installed JDKs
+					installedJDKs := jdk.GetInstalled(config.store)
+					if len(installedJDKs) == 0 {
+						return errors.New("no JDK installations found")
+					}
+
+					if index > len(installedJDKs) {
+						return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installedJDKs))
+					}
+
+					v = installedJDKs[index-1]
+					fmt.Printf("Using index %d to select JDK %s\n", index, v)
+				}
+
 				if !jdk.IsVersionInstalled(config.store, v) {
 					fmt.Printf("jdk %s is not installed. ", v)
 					return nil
@@ -212,7 +232,7 @@ func commands() []cli.Command {
 					}
 				}
 				cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", config.JavaHome, "/M")
-				err := cmd.Run()
+				err = cmd.Run()
 				if err != nil {
 					return errors.New("set Environment variable `JAVA_HOME` failure: Please run as admin user")
 				}
