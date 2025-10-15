@@ -1,4 +1,4 @@
-package commandCli
+package cmdCLi
 
 import (
 	"errors"
@@ -72,8 +72,7 @@ func install(cfx *entity.Config) *cli.Command {
 						// Remove the temp directory
 						// may consider keep the temp files here
 						os.RemoveAll(jdktempfile)
-
-						fmt.Println("Installation complete. If you want to use this version, type\n\njvms switch", v)
+						fmt.Printf("Installation completedly succesfully. Use: jvms switch %v, if you'd like to use this version", v)
 					} else {
 						fmt.Println("Could not download JDK " + v + " executable.")
 					}

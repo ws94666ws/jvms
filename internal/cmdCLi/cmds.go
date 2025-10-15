@@ -1,4 +1,4 @@
-package commandCli
+package cmdCLi
 
 import (
 	"github.com/codegangsta/cli"
@@ -16,6 +16,7 @@ func Commands(cp *CommandParams) []cli.Command {
 		*list(cp.Config),
 		*install(cp.Config),
 		*switch_(cp.Config),
+		*use(cp.Config),
 		*remove(cp.Config),
 		*rls(cp.Config),
 		*proxy(cp.Config),

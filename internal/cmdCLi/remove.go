@@ -1,4 +1,4 @@
-package commandCli
+package cmdCLi
 
 import (
 	"errors"
