@@ -1,4 +1,4 @@
-package cmdCLi
+package cmdCli
 
 import (
 	"encoding/json"
@@ -13,10 +13,10 @@ import (
 	"github.com/ystyle/jvms/utils/web"
 )
 
-// Uses a
-func getSimilarAvailableVersions(version string) {
+// getSImilarAvailableVersions by version to support version not found error
+// func getSimilarAvailableVersions(version string) {
 
-}
+// }
 
 func getJavaHome(jdkTempFile string) string {
 	var javaHome string

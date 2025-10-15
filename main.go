@@ -9,7 +9,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/tucnak/store"
-	"github.com/ystyle/jvms/internal/cmdCLi"
+	"github.com/ystyle/jvms/internal/cmdCli"
 	"github.com/ystyle/jvms/internal/entity"
 	"github.com/ystyle/jvms/utils/file"
 	"github.com/ystyle/jvms/utils/web"
@@ -40,7 +40,7 @@ func main() {
 }
 
 func commands() []cli.Command {
-	cmds := cmdCLi.Commands(&cmdCLi.CommandParams{
+	cmds := cmdCli.Commands(&cmdCli.CommandParams{
 		DefaultOriginalPath: defaultOriginalpath,
 		Config:              &cfx,
 	})
