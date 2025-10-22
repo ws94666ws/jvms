@@ -20,12 +20,12 @@ func switch_(cfx *entity.Config) *cli.Command {
 		Name:      "switch",
 		ShortName: "s",
 		Usage:     "Switch to use the specified version or index number.",
-		Action:    switchFunc(*cfx),
+		Action:    switchFunc(cfx),
 	}
 	return cmd
 }
 
-func switchFunc(cfx entity.Config) func(*cli.Context) error {
+func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 	return func(c *cli.Context) error {
 		v := strings.TrimSpace(c.Args().Get(0))
 		if v == "" {
