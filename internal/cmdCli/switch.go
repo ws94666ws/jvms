@@ -25,6 +25,7 @@ func switch_(cfx *entity.Config) *cli.Command {
 	return cmd
 }
 
+// SwitchFunc is used by both switch and use commands
 func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 	return func(c *cli.Context) error {
 		v := strings.TrimSpace(c.Args().Get(0))
