@@ -21,7 +21,7 @@ const (
 	defaultOriginalpath = "https://raw.githubusercontent.com/ystyle/jvms/new/jdkdlindex.json"
 )
 
-var cfx *entity.Config
+var cfx = &entity.Config{}
 
 func main() {
 	app := cli.NewApp()
