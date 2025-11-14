@@ -21,7 +21,7 @@ const (
 	defaultOriginalpath = "https://raw.githubusercontent.com/ystyle/jvms/new/jdkdlindex.json"
 )
 
-var cfx entity.Config
+var cfx = &entity.Config{}
 
 func main() {
 	app := cli.NewApp()
@@ -42,7 +42,7 @@ func main() {
 func commands() []cli.Command {
 	cmds := cmdCli.Commands(&cmdCli.CommandParams{
 		DefaultOriginalPath: defaultOriginalpath,
-		Config:              &cfx,
+		Config:              cfx,
 	})
 	return cmds
 }

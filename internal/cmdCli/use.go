@@ -10,7 +10,7 @@ func use(cfx *entity.Config) *cli.Command {
 		Name:      "use",
 		ShortName: "u",
 		Usage:     "Switch to use the specified version or index number.",
-		Action:    switchFunc(*cfx),
+		Action:    switchFunc(cfx),
 	}
 	return cmd
 }

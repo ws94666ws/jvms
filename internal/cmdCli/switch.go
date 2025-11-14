@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/codegangsta/cli"
 	"github.com/ystyle/jvms/internal/entity"
@@ -19,14 +20,15 @@ func switch_(cfx *entity.Config) *cli.Command {
 		Name:      "switch",
 		ShortName: "s",
 		Usage:     "Switch to use the specified version or index number.",
-		Action:    switchFunc(*cfx),
+		Action:    switchFunc(cfx),
 	}
 	return cmd
 }
 
-func switchFunc(cfx entity.Config) func(*cli.Context) error {
+// SwitchFunc is used by both switch and use commands
+func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 	return func(c *cli.Context) error {
-		v := c.Args().Get(0)
+		v := strings.TrimSpace(c.Args().Get(0))
 		if v == "" {
 			return errors.New("you should input a version or index number, Type \"jvms list\" to see what is installed")
 		}
