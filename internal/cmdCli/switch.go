@@ -15,11 +15,17 @@ import (
 	"github.com/ystyle/jvms/utils/jdk"
 )
 
+var asPathUsage = "Interpret the argument as a direct path rather than a version or index number."
+
 // Shared flags between switch and use commands
 var switchFlags = []cli.Flag{
 	cli.BoolFlag{
 		Name:  "as_path",
-		Usage: "as_path.",
+		Usage: asPathUsage,
+	},
+	cli.BoolFlag{
+		Name:  "p",
+		Usage: asPathUsage,
 	},
 }
 
