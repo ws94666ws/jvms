@@ -20,7 +20,13 @@ func switch_(cfx *entity.Config) *cli.Command {
 		Name:      "switch",
 		ShortName: "s",
 		Usage:     "Switch to use the specified version or index number.",
-		Action:    switchFunc(cfx),
+		Flags: []cli.Flag{
+			cli.BoolFlag{
+				Name:  "as_path",
+				Usage: "as_path.",
+			},
+		},
+		Action: switchFunc(cfx),
 	}
 	return cmd
 }
@@ -36,20 +42,24 @@ func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 		// Check if input is a number (index)
 		index, err := strconv.Atoi(v)
 		if err == nil && index > 0 {
-			// Input is a valid number, get the list of installed JDKs
-			installedJDKs := jdk.GetInstalled(cfx.Store)
-			if len(installedJDKs) == 0 {
-				return errors.New("no JDK installations found")
-			}
+			asPath := c.Bool("as_path")
 
-			if index > len(installedJDKs) {
-				return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installedJDKs))
+			// If not as_path, try index expansion
+			if !asPath {
+				index, err := strconv.Atoi(v)
+				if err == nil && index > 0 {
+					installed := jdk.GetInstalled(cfx.Store)
+					if len(installed) == 0 {
+						return errors.New("no JDK installations found")
+					}
+					if index > len(installed) {
+						return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installed))
+					}
+					v = installed[index-1]
+					fmt.Printf("Using index %d to select JDK %s\n", index, v)
+				}
 			}
-
-			v = installedJDKs[index-1]
-			fmt.Printf("Using index %d to select JDK %s\n", index, v)
 		}
-
 		if !jdk.IsVersionInstalled(cfx.Store, v) {
 			fmt.Printf("jdk %s is not installed. ", v)
 			return nil
