@@ -58,18 +58,15 @@ func switchFunc(config *entity.Config) func(*cli.Context) error {
 
 			// If not as_path, try index expansion
 			if !asPath {
-				index, err := strconv.Atoi(v)
-				if err == nil && index > 0 {
-					installed := jdk.GetInstalled(config.Store)
-					if len(installed) == 0 {
-						return errors.New("no JDK installations found")
-					}
-					if index > len(installed) {
-						return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installed))
-					}
-					v = installed[index-1]
-					fmt.Printf("Using index %d to select JDK %s\n", index, v)
+				installed := jdk.GetInstalled(config.Store)
+				if len(installed) == 0 {
+					return errors.New("no JDK installations found")
 				}
+				if index > len(installed) {
+					return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installed))
+				}
+				v = installed[index-1]
+				fmt.Printf("Using index %d to select JDK %s\n", index, v)
 			}
 		}
 		if !jdk.IsVersionInstalled(config.Store, v) {
