@@ -13,44 +13,44 @@ import (
 	"github.com/ystyle/jvms/utils/web"
 )
 
-func install(cfx *entity.Config) *cli.Command {
+func install(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:      "install",
 		ShortName: "i",
 		Usage:     "Install available remote jdk",
 		Action: func(c *cli.Context) error {
-			if cfx.Proxy != "" {
-				web.SetProxy(cfx.Proxy)
+			if config.Proxy != "" {
+				web.SetProxy(config.Proxy)
 			}
 			v := c.Args().Get(0)
 			if v == "" {
 				return errors.New("invalid version., Type \"jvms rls\" to see what is available for install")
 			}
 
-			if jdk.IsVersionInstalled(cfx.Store, v) {
+			if jdk.IsVersionInstalled(config.Store, v) {
 				fmt.Println("Version " + v + " is already installed.")
 				return nil
 			}
-			versions, err := getJdkVersions(cfx)
+			versions, err := getJdkVersions(config)
 			if err != nil {
 				return err
 			}
 
-			if !file.Exists(cfx.Download) {
-				os.MkdirAll(cfx.Download, 0777)
+			if !file.Exists(config.Download) {
+				os.MkdirAll(config.Download, 0777)
 			}
-			if !file.Exists(cfx.Store) {
-				os.MkdirAll(cfx.Store, 0777)
+			if !file.Exists(config.Store) {
+				os.MkdirAll(config.Store, 0777)
 			}
 
 			for _, version := range versions {
 				if version.Version == v {
-					dlzipfile, success := web.GetJDK(cfx.Download, v, version.Url)
+					dlzipfile, success := web.GetJDK(config.Download, v, version.Url)
 					if success {
 						fmt.Printf("Installing JDK %s ...\n", v)
 
 						// Extract jdk to the temp directory
-						jdktempfile := filepath.Join(cfx.Download, fmt.Sprintf("%s_temp", v))
+						jdktempfile := filepath.Join(config.Download, fmt.Sprintf("%s_temp", v))
 						if file.Exists(jdktempfile) {
 							err := os.RemoveAll(jdktempfile)
 							if err != nil {
@@ -64,7 +64,7 @@ func install(cfx *entity.Config) *cli.Command {
 
 						// Copy the jdk files to the installation directory
 						temJavaHome := getJavaHome(jdktempfile)
-						err = os.Rename(temJavaHome, filepath.Join(cfx.Store, v))
+						err = os.Rename(temJavaHome, filepath.Join(config.Store, v))
 						if err != nil {
 							return fmt.Errorf("unzip failed: %w", err)
 						}

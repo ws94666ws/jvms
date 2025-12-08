@@ -23,19 +23,19 @@ var switchFlags = []cli.Flag{
 	},
 }
 
-func switch_(cfx *entity.Config) *cli.Command {
+func switch_(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:      "switch",
 		ShortName: "s",
 		Usage:     "Switch to use the specified version or index number.",
 		Flags:     switchFlags,
-		Action:    switchFunc(cfx),
+		Action:    switchFunc(config),
 	}
 	return cmd
 }
 
 // SwitchFunc is used by both switch and use commands
-func switchFunc(cfx *entity.Config) func(*cli.Context) error {
+func switchFunc(config *entity.Config) func(*cli.Context) error {
 	return func(c *cli.Context) error {
 		v := strings.TrimSpace(c.Args().Get(0))
 		if v == "" {
@@ -51,7 +51,7 @@ func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 			if !asPath {
 				index, err := strconv.Atoi(v)
 				if err == nil && index > 0 {
-					installed := jdk.GetInstalled(cfx.Store)
+					installed := jdk.GetInstalled(config.Store)
 					if len(installed) == 0 {
 						return errors.New("no JDK installations found")
 					}
@@ -63,28 +63,28 @@ func switchFunc(cfx *entity.Config) func(*cli.Context) error {
 				}
 			}
 		}
-		if !jdk.IsVersionInstalled(cfx.Store, v) {
+		if !jdk.IsVersionInstalled(config.Store, v) {
 			fmt.Printf("jdk %s is not installed. ", v)
 			return nil
 		}
 		// Create or update the symlink
-		if file.Exists(cfx.JavaHome) {
-			err := os.Remove(cfx.JavaHome)
+		if file.Exists(config.JavaHome) {
+			err := os.Remove(config.JavaHome)
 			if err != nil {
-				return errors.New("Switch jdk failed, please manually remove " + cfx.JavaHome)
+				return errors.New("Switch jdk failed, please manually remove " + config.JavaHome)
 			}
 		}
-		cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", cfx.JavaHome, "/M")
+		cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", config.JavaHome, "/M")
 		err = cmd.Run()
 		if err != nil {
 			return errors.New("set Environment variable `JAVA_HOME` failure: Please run as admin user")
 		}
-		err = os.Symlink(filepath.Join(cfx.Store, v), cfx.JavaHome)
+		err = os.Symlink(filepath.Join(config.Store, v), config.JavaHome)
 		if err != nil {
 			return errors.New("Switch jdk failed, " + err.Error())
 		}
 		fmt.Println("Switch success.\nNow using JDK " + v)
-		cfx.CurrentJDKVersion = v
+		config.CurrentJDKVersion = v
 		return nil
 	}
 }

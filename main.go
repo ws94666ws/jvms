@@ -21,7 +21,7 @@ const (
 	defaultOriginalpath = "https://raw.githubusercontent.com/ystyle/jvms/new/jdkdlindex.json"
 )
 
-var cfx = &entity.Config{}
+var config = &entity.Config{}
 
 func main() {
 	app := cli.NewApp()
@@ -42,7 +42,7 @@ func main() {
 func commands() []cli.Command {
 	cmds := cmdCli.Commands(&cmdCli.CommandParams{
 		DefaultOriginalPath: defaultOriginalpath,
-		Config:              cfx,
+		Config:              config,
 	})
 	return cmds
 }
@@ -60,24 +60,24 @@ func startup(c *cli.Context) error {
 		json.Unmarshal)
 
 	store.Init("jvms")
-	if err := store.Load("jvms.json", &cfx); err != nil {
+	if err := store.Load("jvms.json", &config); err != nil {
 		return errors.New("failed to load the config:" + err.Error())
 	}
 	s := file.GetCurrentPath()
-	cfx.Store = filepath.Join(s, "store")
+	config.Store = filepath.Join(s, "store")
 
-	cfx.Download = filepath.Join(s, "download")
-	if cfx.Originalpath == "" {
-		cfx.Originalpath = defaultOriginalpath
+	config.Download = filepath.Join(s, "download")
+	if config.Originalpath == "" {
+		config.Originalpath = defaultOriginalpath
 	}
-	if cfx.Proxy != "" {
-		web.SetProxy(cfx.Proxy)
+	if config.Proxy != "" {
+		web.SetProxy(config.Proxy)
 	}
 	return nil
 }
 
 func shutdown(c *cli.Context) error {
-	if err := store.Save("jvms.json", &cfx); err != nil {
+	if err := store.Save("jvms.json", &config); err != nil {
 		return errors.New("failed to save the config:" + err.Error())
 	}
 	return nil

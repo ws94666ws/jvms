@@ -5,13 +5,13 @@ import (
 	"github.com/ystyle/jvms/internal/entity"
 )
 
-func use(cfx *entity.Config) *cli.Command {
+func use(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:      "use",
 		ShortName: "u",
 		Usage:     "Switch to use the specified version or index number.",
 		Flags:     switchFlags,
-		Action:    switchFunc(cfx),
+		Action:    switchFunc(config),
 	}
 	return cmd
 }

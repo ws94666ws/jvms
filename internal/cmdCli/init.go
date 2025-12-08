@@ -12,7 +12,7 @@ import (
 	"github.com/ystyle/jvms/utils/file"
 )
 
-func init_(defaultOriginalpath string, cfx *entity.Config) *cli.Command {
+func init_(defaultOriginalpath string, config *entity.Config) *cli.Command {
 	return &cli.Command{
 		Name:        "init",
 		Usage:       "Initialize config file",
@@ -30,20 +30,20 @@ func init_(defaultOriginalpath string, cfx *entity.Config) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if c.IsSet("java_home") || cfx.JavaHome == "" {
-				cfx.JavaHome = c.String("java_home")
+			if c.IsSet("java_home") || config.JavaHome == "" {
+				config.JavaHome = c.String("java_home")
 			}
-			cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", cfx.JavaHome, "/M")
+			cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", config.JavaHome, "/M")
 			err := cmd.Run()
 			if err != nil {
 				return errors.New("set Environment variable `JAVA_HOME` failure: Please run as admin user")
 			}
-			fmt.Println("set `JAVA_HOME` Environment variable to ", cfx.JavaHome)
+			fmt.Println("set `JAVA_HOME` Environment variable to ", config.JavaHome)
 
-			if c.IsSet("originalpath") || cfx.Originalpath == "" {
-				cfx.Originalpath = c.String("originalpath")
+			if c.IsSet("originalpath") || config.Originalpath == "" {
+				config.Originalpath = c.String("originalpath")
 			}
-			path := fmt.Sprintf(`%s/bin;%s;%s`, cfx.JavaHome, os.Getenv("PATH"), file.GetCurrentPath())
+			path := fmt.Sprintf(`%s/bin;%s;%s`, config.JavaHome, os.Getenv("PATH"), file.GetCurrentPath())
 			cmd = exec.Command("cmd", "/C", "setx", "path", path, "/m")
 			err = cmd.Run()
 			if err != nil {
