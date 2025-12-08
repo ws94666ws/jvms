@@ -15,18 +15,21 @@ import (
 	"github.com/ystyle/jvms/utils/jdk"
 )
 
+// Shared flags between switch and use commands
+var switchFlags = []cli.Flag{
+	cli.BoolFlag{
+		Name:  "as_path",
+		Usage: "as_path.",
+	},
+}
+
 func switch_(cfx *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:      "switch",
 		ShortName: "s",
 		Usage:     "Switch to use the specified version or index number.",
-		Flags: []cli.Flag{
-			cli.BoolFlag{
-				Name:  "as_path",
-				Usage: "as_path.",
-			},
-		},
-		Action: switchFunc(cfx),
+		Flags:     switchFlags,
+		Action:    switchFunc(cfx),
 	}
 	return cmd
 }
