@@ -52,6 +52,9 @@ func switchFunc(config *entity.Config) func(*cli.Context) error {
 		index, err := strconv.Atoi(v)
 		if err == nil && index > 0 {
 			asPath := c.Bool("as_path")
+			if !asPath {
+				asPath = c.Bool("p")
+			}
 
 			// If not as_path, try index expansion
 			if !asPath {
