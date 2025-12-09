@@ -28,11 +28,11 @@ func intercept(config *entity.Config) func(*cli.Context) error {
 			// If not installed, redirect to install
 			if !isInstalled {
 				fmt.Printf("Version %s is not installed. Installing now...\n", v)
-				installFunc(config)(c)
-				return switchFunc(config)(c)
+				err := installFunc(config)(c)
+				if err != nil {
+					return err
+				}
 			}
-			// If installed, redirect to switch
-			return switchFunc(config)(c)
 		}
 
 		return switchFunc(config)(c)
