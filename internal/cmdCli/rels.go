@@ -8,7 +8,7 @@ import (
 	"github.com/ystyle/jvms/utils/web"
 )
 
-func rls(cfx *entity.Config) *cli.Command {
+func rls(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:  "rls",
 		Usage: "Show a list of versions available for download. ",
@@ -19,10 +19,10 @@ func rls(cfx *entity.Config) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if cfx.Proxy != "" {
-				web.SetProxy(cfx.Proxy)
+			if config.Proxy != "" {
+				web.SetProxy(config.Proxy)
 			}
-			versions, err := getJdkVersions(cfx)
+			versions, err := getJdkVersions(config)
 			if err != nil {
 				return err
 			}
@@ -37,7 +37,7 @@ func rls(cfx *entity.Config) *cli.Command {
 				fmt.Println("No availabled jdk veriosn for download.")
 			}
 
-			fmt.Printf("\nFor a complete list, visit %s\n", cfx.Originalpath)
+			fmt.Printf("\nFor a complete list, visit %s\n", config.Originalpath)
 			return nil
 		},
 	}

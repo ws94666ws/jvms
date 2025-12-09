@@ -7,7 +7,7 @@ import (
 	"github.com/ystyle/jvms/internal/entity"
 )
 
-func proxy(cfx *entity.Config) *cli.Command {
+func proxy(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:  "proxy",
 		Usage: "Set a proxy to use for downloads.",
@@ -23,11 +23,11 @@ func proxy(cfx *entity.Config) *cli.Command {
 		},
 		Action: func(c *cli.Context) error {
 			if c.Bool("show") {
-				fmt.Printf("Current proxy: %s\n", cfx.Proxy)
+				fmt.Printf("Current proxy: %s\n", config.Proxy)
 				return nil
 			}
 			if c.IsSet("set") {
-				cfx.Proxy = c.String("set")
+				config.Proxy = c.String("set")
 			}
 			return nil
 		},

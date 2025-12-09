@@ -11,7 +11,7 @@ import (
 	"github.com/ystyle/jvms/utils/jdk"
 )
 
-func remove(cfx *entity.Config) *cli.Command {
+func remove(config *entity.Config) *cli.Command {
 	cmd := &cli.Command{
 		Name:      "remove",
 		ShortName: "rm",
@@ -21,12 +21,12 @@ func remove(cfx *entity.Config) *cli.Command {
 			if v == "" {
 				return errors.New("you should input a version, Type \"jvms list\" to see what is installed")
 			}
-			if jdk.IsVersionInstalled(cfx.Store, v) {
+			if jdk.IsVersionInstalled(config.Store, v) {
 				fmt.Printf("Remove JDK %s ...\n", v)
-				if cfx.CurrentJDKVersion == v {
-					os.Remove(cfx.JavaHome)
+				if config.CurrentJDKVersion == v {
+					os.Remove(config.JavaHome)
 				}
-				dir := filepath.Join(cfx.Store, v)
+				dir := filepath.Join(config.Store, v)
 				e := os.RemoveAll(dir)
 				if e != nil {
 					fmt.Println("Error removing jdk " + v)

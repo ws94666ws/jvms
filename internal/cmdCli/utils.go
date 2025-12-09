@@ -31,8 +31,8 @@ func getJavaHome(jdkTempFile string) string {
 	return javaHome
 }
 
-func getJdkVersions(cfx *entity.Config) ([]entity.JdkVersion, error) {
-	jsonContent, err := web.GetRemoteTextFile(cfx.Originalpath)
+func getJdkVersions(config *entity.Config) ([]entity.JdkVersion, error) {
+	jsonContent, err := web.GetRemoteTextFile(config.Originalpath)
 	if err != nil {
 		return nil, err
 	}
