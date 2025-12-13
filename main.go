@@ -53,8 +53,12 @@ func startup(c *cli.Context) error {
 		return errors.New("failed to load the config:" + err.Error())
 	}
 	s := file.GetCurrentPath()
-	config.Store = filepath.Join(s, "store")
 
+	config.Store = filepath.Join(s, "store")
+	// Override store path by storepath file
+	if storepath, err := os.ReadFile(filepath.Join(s, "storepath")); err == nil {
+		config.Store = string(storepath)
+	}
 	config.Download = filepath.Join(s, "download")
 	if config.Originalpath == "" {
 		config.Originalpath = cmdCli.DefaultOriginalpath
