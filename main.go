@@ -15,9 +15,10 @@ import (
 	"github.com/ystyle/jvms/utils/web"
 )
 
-var version = "2.1.0"
-
-var config = &entity.Config{}
+var (
+	version = "2.1.0"
+	config  = &entity.Config{}
+)
 
 func main() {
 	app := cli.NewApp()
