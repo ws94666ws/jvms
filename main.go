@@ -15,13 +15,10 @@ import (
 	"github.com/ystyle/jvms/utils/web"
 )
 
-var version = "2.1.0"
-
-const (
-	defaultOriginalpath = "https://raw.githubusercontent.com/ystyle/jvms/new/jdkdlindex.json"
+var (
+	version = "2.1.0"
+	config  = &entity.Config{}
 )
-
-var config = &entity.Config{}
 
 func main() {
 	app := cli.NewApp()
@@ -29,7 +26,7 @@ func main() {
 	app.Usage = `JDK Version Manager (JVMS) for Windows`
 	app.Version = version
 	app.CommandNotFound = commandNotFound
-	app.Commands = commands()
+	app.Commands = cmdCli.Commands(config)
 
 	app.Before = startup
 	app.After = shutdown
@@ -37,14 +34,6 @@ func main() {
 		log.Fatal(err.Error())
 		os.Exit(1)
 	}
-}
-
-func commands() []cli.Command {
-	cmds := cmdCli.Commands(&cmdCli.CommandParams{
-		DefaultOriginalPath: defaultOriginalpath,
-		Config:              config,
-	})
-	return cmds
 }
 
 func commandNotFound(c *cli.Context, command string) {
@@ -64,11 +53,15 @@ func startup(c *cli.Context) error {
 		return errors.New("failed to load the config:" + err.Error())
 	}
 	s := file.GetCurrentPath()
-	config.Store = filepath.Join(s, "store")
 
+	config.Store = filepath.Join(s, "store")
+	// Override store path by storepath file
+	if storepath, err := os.ReadFile(filepath.Join(s, "storepath")); err == nil {
+		config.Store = string(storepath)
+	}
 	config.Download = filepath.Join(s, "download")
 	if config.Originalpath == "" {
-		config.Originalpath = defaultOriginalpath
+		config.Originalpath = cmdCli.DefaultOriginalpath
 	}
 	if config.Proxy != "" {
 		web.SetProxy(config.Proxy)

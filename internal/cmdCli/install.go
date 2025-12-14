@@ -23,6 +23,15 @@ func install(config *entity.Config) *cli.Command {
 	return cmd
 }
 
+func installPrerequisites(config *entity.Config) {
+	if !file.Exists(config.Download) {
+		os.MkdirAll(config.Download, 0777)
+	}
+	if !file.Exists(config.Store) {
+		os.MkdirAll(config.Store, 0777)
+	}
+}
+
 func installFunc(config *entity.Config) func(*cli.Context) error {
 	return func(c *cli.Context) error {
 		if config.Proxy != "" {
@@ -42,13 +51,7 @@ func installFunc(config *entity.Config) func(*cli.Context) error {
 			return err
 		}
 
-		if !file.Exists(config.Download) {
-			os.MkdirAll(config.Download, 0777)
-		}
-		if !file.Exists(config.Store) {
-			os.MkdirAll(config.Store, 0777)
-		}
-
+		installPrerequisites(config)
 		for _, version := range versions {
 			if version.Version == v {
 				dlzipfile, success := web.GetJDK(config.Download, v, version.Url)

@@ -12,7 +12,7 @@ import (
 	"github.com/ystyle/jvms/utils/file"
 )
 
-func init_(defaultOriginalpath string, config *entity.Config) *cli.Command {
+func init_(config *entity.Config) *cli.Command {
 	return &cli.Command{
 		Name:        "init",
 		Usage:       "Initialize config file",
@@ -26,7 +26,7 @@ func init_(defaultOriginalpath string, config *entity.Config) *cli.Command {
 			cli.StringFlag{
 				Name:  "originalpath",
 				Usage: "the jdk download index file url.",
-				Value: defaultOriginalpath,
+				Value: DefaultOriginalpath,
 			},
 		},
 		Action: func(c *cli.Context) error {
