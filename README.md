@@ -53,6 +53,36 @@ how to install and switch jdk. see:
 - `jvms switch 1.8.0_31` *switch jdk version to 1.8.0_31*
 
 ![](images/powershell_2017-07-23_01-26-40.png)
+
+---
+
+## JDK Sources and Version Policy
+
+JVMS supports multiple JDK distributions to give you flexibility in choosing your preferred JDK:
+
+### Supported JDK Distributions
+
+1. **Oracle JDK** - Included in default index (LTS versions only)
+2. **Amazon Corretto** - Included in default index (LTS versions only)
+3. **Adoptium (Eclipse Temurin)** - Available via API, dynamically fetched
+4. **Azul Zulu** - Available via API, dynamically fetched
+
+### LTS-Only Policy
+
+The default `jdkdlindex.json` only includes **LTS (Long-Term Support)** versions:
+- Java 8
+- Java 11
+- Java 17
+- Java 21
+- Java 25
+
+Non-LTS versions (Java 9, 10, 12, 13, 14, 15, 16, 18, 19, 20, 22, 23, 24, etc.) are not included in the default index as they reach end-of-life in 6 months.
+
+However, you can still install non-LTS versions if needed:
+- Use `jvms rls` to see all available versions (including non-LTS from Adoptium and Azul)
+- Add your own local JDK versions (see below)
+- Set up a custom download server with your preferred versions
+
 ---
 
 ## What's the big difference?
