@@ -88,7 +88,11 @@ func switchFunc(config *entity.Config) func(*cli.Context) error {
 		if file.Exists(config.JavaHome) {
 			err := os.Remove(config.JavaHome)
 			if err != nil {
-				return errors.New("Switch jdk failed, please manually remove " + config.JavaHome)
+				return fmt.Errorf("failed to remove existing JavaHome symlink at %s: %w\n\nPossible reasons:\n"+
+					"- Insufficient permissions (try running as administrator)\n"+
+					"- File is in use by another process\n"+
+					"- Path points to a directory instead of a symlink\n"+
+					"Please manually remove it and try again", config.JavaHome, err)
 			}
 		}
 		cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", config.JavaHome, "/M")
