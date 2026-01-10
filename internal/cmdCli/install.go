@@ -83,7 +83,14 @@ func installFunc(config *entity.Config) func(*cli.Context) error {
 					os.RemoveAll(jdktempfile)
 					fmt.Printf("Installation completedly succesfully. Use: jvms switch %v, if you'd like to use this version", v)
 				} else {
-					fmt.Println("Could not download JDK " + v + " executable.")
+					fmt.Printf("\nCould not download JDK %s executable.\n\n", v)
+					fmt.Println("Possible solutions:")
+					fmt.Println("1. Check your internet connection")
+					fmt.Println("2. Set a proxy if you're behind a firewall:")
+					fmt.Println("   jvms config proxy http://127.0.0.1:1080")
+					fmt.Println("   or set environment variable: set http_proxy=http://127.0.0.1:1080")
+					fmt.Println("3. Try again later as the server might be temporarily unavailable")
+					fmt.Println("4. Or manually download and add the JDK (see README for details)")
 				}
 				return nil
 			}
