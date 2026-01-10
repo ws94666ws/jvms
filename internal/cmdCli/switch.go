@@ -62,11 +62,22 @@ func switchFunc(config *entity.Config) func(*cli.Context) error {
 				if len(installed) == 0 {
 					return errors.New("no JDK installations found")
 				}
-				if index > len(installed) {
-					return fmt.Errorf("invalid index: %d, should be between 1 and %d", index, len(installed))
+				// Check if index is within valid range
+				if index <= len(installed) {
+					// Valid index, use it to select JDK
+					v = installed[index-1]
+					fmt.Printf("Using index %d to select JDK %s\n", index, v)
+				} else {
+					// Index out of range, check if there's a version folder with this numeric name (e.g., "17", "21")
+					// Keep the original input as version name
+					if jdk.IsVersionInstalled(config.Store, v) {
+						// Version folder with numeric name exists, proceed with it
+						fmt.Printf("Using version name %s\n", v)
+					} else {
+						// Neither valid index nor matching version folder
+						return fmt.Errorf("invalid index: %d (should be between 1 and %d) and version '%s' is not installed", index, len(installed), v)
+					}
 				}
-				v = installed[index-1]
-				fmt.Printf("Using index %d to select JDK %s\n", index, v)
 			}
 		}
 		if !jdk.IsVersionInstalled(config.Store, v) {
