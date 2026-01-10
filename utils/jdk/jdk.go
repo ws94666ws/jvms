@@ -1,9 +1,9 @@
 package jdk
 
 import (
-	"fmt"
 	"github.com/ystyle/jvms/utils/file"
 	"os"
+	"path/filepath"
 )
 
 func GetInstalled(root string) []string {
@@ -18,6 +18,7 @@ func GetInstalled(root string) []string {
 }
 
 func IsVersionInstalled(root string, version string) bool {
-	isInstalled := file.Exists(fmt.Sprintf("%s/%s/bin/javac.exe", root, version))
+	path := filepath.Join(root, version, "bin", "javac.exe")
+	isInstalled := file.Exists(path)
 	return isInstalled
 }
