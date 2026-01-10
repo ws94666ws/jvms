@@ -1,7 +1,6 @@
 package cmdCli
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -36,7 +35,12 @@ func init_(config *entity.Config) *cli.Command {
 			cmd := exec.Command("cmd", "/C", "setx", "JAVA_HOME", config.JavaHome, "/M")
 			err := cmd.Run()
 			if err != nil {
-				return errors.New("set Environment variable `JAVA_HOME` failure: Please run as admin user")
+				return fmt.Errorf("failed to set JAVA_HOME environment variable to %s: %w\n\n"+
+					"Possible reasons:\n"+
+					"- Insufficient permissions (try running as administrator)\n"+
+					"- Command execution failed\n"+
+					"- Invalid path format\n"+
+					"Please run Command Prompt as Administrator and try again", config.JavaHome, err)
 			}
 			fmt.Println("set `JAVA_HOME` Environment variable to ", config.JavaHome)
 
@@ -47,7 +51,12 @@ func init_(config *entity.Config) *cli.Command {
 			cmd = exec.Command("cmd", "/C", "setx", "path", path, "/m")
 			err = cmd.Run()
 			if err != nil {
-				return errors.New("set Environment variable `PATH` failure: Please run as admin user")
+				return fmt.Errorf("failed to add jvms.exe to PATH environment variable: %w\n\n"+
+					"Possible reasons:\n"+
+					"- Insufficient permissions (try running as administrator)\n"+
+					"- PATH variable is too long (Windows has a 2048 character limit)\n"+
+					"- Command execution failed\n"+
+					"Please run Command Prompt as Administrator and try again", err)
 			}
 			fmt.Println("add jvms.exe to `path` Environment variable")
 			return nil
