@@ -1,6 +1,7 @@
 package cmdCli
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -8,6 +9,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/ystyle/jvms/internal/entity"
+	"github.com/ystyle/jvms/utils/admin"
 	"github.com/ystyle/jvms/utils/file"
 )
 
@@ -29,6 +31,9 @@ func init_(config *entity.Config) *cli.Command {
 			},
 		},
 		Action: func(c *cli.Context) error {
+			if !admin.IsAdmin() {
+				return errors.New("jvms init requires administrator privileges. Please run as administrator")
+			}
 			if c.IsSet("java_home") || config.JavaHome == "" {
 				config.JavaHome = c.String("java_home")
 			}
